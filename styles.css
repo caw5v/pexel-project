@@ -1,0 +1,167 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: montserrat, sans-serif;
+}
+
+nav {
+  display: flex;
+  position: fixed;
+  z-index: 3;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0.5em 1em;
+  color: white;
+  font-weight: bold;
+  background: rgb(35, 47, 58);
+}
+
+.brand-logo-container {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  width: 45%;
+  gap: 2em;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.logo {
+  background: rgb(36, 180, 137);
+  padding: 0.3em 0.5em;
+  border-radius: 10px;
+  font-size: 1.4em;
+}
+
+.navigation {
+  display: flex;
+  gap: 2em;
+  align-items: center;
+}
+
+.search {
+  display: flex;
+  width: 100%;
+}
+
+.nav-search-visible {
+  position: relative;
+  visibility: visible;
+  /* padding: 1.5em 1.2em 0.9em 1.2em; */
+  padding: 1.1em 1em 0.9em 1em;
+  color: rgb(87, 87, 87);
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  font-size: 1em;
+}
+
+.nav-search-visible::placeholder {
+  position: absolute;
+  font-size: 1.1em;
+  font-weight: normal;
+  text-align: start;
+  top: 0.95em;
+}
+
+.search-icon {
+  position: absolute;
+
+  top: 0.9em;
+  right: 0.5em;
+  width: 1.5em;
+}
+
+.search-icon:hover {
+  cursor: pointer;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  height: 60vh;
+  width: 100%;
+  background-image: url(https://images.pexels.com/photos/8747714/pexels-photo-8747714.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
+  background-position: center;
+  background-size: cover;
+}
+
+.heading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 35%;
+  height: 28%;
+  line-height: 3em;
+}
+
+h1 {
+  text-shadow: 0.5px 0.5px 0.5px rgb(94, 94, 94);
+}
+
+.heading-search-container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
+.heading-search {
+  width: 100%;
+  padding: 1.3em;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  color: gray;
+}
+
+.heading-search::placeholder {
+  font-size: 1.1em;
+  color: gray;
+}
+
+.heading-search-icon {
+  top: 1em;
+}
+
+main {
+  height: 94vh;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  padding: 3.5em 2.5em 0 3.5em;
+}
+
+.columns {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3em;
+  width: 25vw;
+}
+
+.columns:hover {
+  overflow-y: scroll;
+  cursor: pointer;
+}
+
+.columns::-webkit-scrollbar {
+  visibility: visible;
+}
+
+img {
+  width: 100%;
+}
