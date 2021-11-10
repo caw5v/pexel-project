@@ -8,10 +8,15 @@ const searchFieldNav = document.querySelector(".nav-search");
 const searchFieldHeading = document.querySelector(".heading-search");
 const inputs = document.querySelectorAll("input");
 const magnifyingGlass = document.querySelectorAll(".search-icon");
+const toggle = document.querySelector(".switch").firstElementChild;
 
 let i = 1;
 let j = 50;
 let search = `landscape people`;
+let toggleChecked = false;
+let scrollTopArray = [];
+let wheelDeltaY = null;
+let mouseoverCurrentTarget = null;
 
 window.onload = () => {
   loadDoc(i, search);
@@ -68,9 +73,8 @@ window.onload = () => {
       }
     });
   });
-};
 
-// if (input.value.trim() === "enter") {
-//   console.log(e.key);
-//   loadDoc(i, `input.value.trim()`);
-// }
+  toggle.addEventListener("click", (e) => {
+    columnsEvent();
+  });
+};
