@@ -3,12 +3,13 @@ const columnOne = document.querySelector(".column-one");
 const columnTwo = document.querySelector(".column-two");
 const columnThree = document.querySelector(".column-three");
 const columnFour = document.querySelector(".column-four");
-const columns = document.querySelectorAll(".columns");
+const colSelector = document.querySelectorAll(".col-selector");
 const searchFieldNav = document.querySelector(".nav-search");
 const searchFieldHeading = document.querySelector(".heading-search");
 const inputs = document.querySelectorAll("input");
 const magnifyingGlass = document.querySelectorAll(".search-icon");
 const toggle = document.querySelector(".switch").firstElementChild;
+const columnContainer = document.querySelector("#column-container");
 
 let i = 1;
 let j = 50;
@@ -75,6 +76,6 @@ window.onload = () => {
   });
 
   toggle.addEventListener("click", (e) => {
-    columnsEvent();
+    toggleConditional();
   });
 };

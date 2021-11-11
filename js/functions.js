@@ -57,13 +57,13 @@ function loadDoc(num, searchValue) {
 }
 
 function columnReload() {
-  columns.forEach((col) => {
+  colSelector.forEach((col) => {
     for (let i = 0; i < col.children.length; ++i) {
       col.children[i].innerHTML = ``;
     }
   });
 
-  columns.forEach((col) => {
+  colSelector.forEach((col) => {
     for (let i = 0; i < col.children.length; ++i) {
       if (col.children[i].innerHTML === ``) {
         col.children[i].style = "display: none";
@@ -73,62 +73,22 @@ function columnReload() {
 }
 
 function toggleConditional() {
-  console.log(mouseoverCurrentTarget);
-  if ((toggle.checked === true && Math.sign(wheelDeltaY) === 1) || Math.sign(wheelDeltaY) === -1) {
-    console.log(scrollTopArray.length);
-
-    if (scrollTopArray.length < 3) {
-      scrollTopArray.push(document.querySelector("." + mouseoverCurrentTarget).scrollTop);
+  if (toggle.checked === true) {
+    for (let col of colSelector) {
+      col.classList.add("columns-overflow");
+      col.classList.remove("columns");
     }
-    if (scrollTopArray.length === 3) {
-      scrollTopArray.shift();
+    columnContainer.style.gap = ".5em";
+    columnContainer.style.padding = ".4em 2.57em 0 3.5em";
+    columnContainer.style.height = "94vh";
+  } else {
+    for (let col of colSelector) {
+      col.classList.remove("columns-overflow");
+      col.classList.add("columns");
     }
-
-    console.log(scrollTopArray);
-
-    let amountScrolled = scrollTopArray[1] - scrollTopArray[0];
-
-    switch (mouseoverCurrentTarget) {
-      case "column-one":
-        columnTwo.scrollTop = amountScrolled + columnTwo.scrollTop;
-        columnThree.scrollTop = amountScrolled + columnThree.scrollTop;
-        columnFour.scrollTop = amountScrolled + columnFour.scrollTop;
-        break;
-
-      case "column-two":
-        columnOne.scrollTop = amountScrolled + columnOne.scrollTop;
-        columnThree.scrollTop = amountScrolled + columnThree.scrollTop;
-        columnFour.scrollTop = amountScrolled + columnFour.scrollTop;
-        break;
-
-      case "column-three":
-        columnOne.scrollTop = amountScrolled + columnOne.scrollTop;
-        columnTwo.scrollTop = amountScrolled + columnTwo.scrollTop;
-        columnFour.scrollTop = amountScrolled + columnFour.scrollTop;
-        break;
-
-      case "column-four":
-        console.log("do i work", amountScrolled);
-        columnOne.scrollTop = amountScrolled + columnOne.scrollTop;
-        columnTwo.scrollTop = amountScrolled + columnTwo.scrollTop;
-        columnThree.scrollTop = amountScrolled + columnThree.scrollTop;
-        break;
-    }
-  }
-}
-
-function columnsEvent() {
-  for (let col of columns) {
-    col.addEventListener("wheel", (e) => {
-      wheelDeltaY = e.deltaY;
-
-      toggleConditional();
-    });
-    col.addEventListener("mouseover", (e) => {
-      mouseoverCurrentTarget = e.currentTarget.classList[1];
-
-      toggleConditional();
-    });
+    columnContainer.style.gap = "1.5em";
+    columnContainer.style.padding = ".4em 3.5em 0 3.5em";
+    columnContainer.style.height = "fit-content";
   }
 }
 
