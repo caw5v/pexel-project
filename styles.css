@@ -6,6 +6,8 @@
 
 body {
   position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
   font-family: montserrat, sans-serif;
 }
 
@@ -18,7 +20,7 @@ nav {
   padding: 0.5em 1em;
   color: white;
   font-weight: bold;
-  background: rgb(0, 70, 67);
+  background: rgb(40, 63, 83);
 }
 
 .brand-logo-container {
@@ -36,7 +38,8 @@ nav {
 }
 
 .logo {
-  background: rgb(171, 209, 198);
+  background: white;
+  color: rgb(40, 63, 83);
   padding: 0.3em 0.5em;
   border-radius: 10px;
   font-size: 1.4em;
@@ -139,6 +142,7 @@ h1 {
 main {
   display: flex;
   height: 100%;
+
   flex-direction: column;
 }
 
@@ -155,7 +159,7 @@ main {
 }
 
 #toggle-text {
-  color: rgb(0, 30, 29);
+  color: rgb(40, 63, 83);
   font-weight: bold;
   font-size: 1.1em;
 }
@@ -180,7 +184,7 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: rgba(0, 70, 67, 0.5);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -198,11 +202,11 @@ main {
 }
 
 input:checked + .slider {
-  background-color: rgb(225, 97, 98);
+  background-color: rgb(225, 97, 98, 0.8);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px rgb(225, 97, 98);
+  box-shadow: 0 0 1px rgb(225, 97, 98, 0.8);
 }
 
 input:checked + .slider:before {
@@ -220,10 +224,17 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-#column-container {
+.column-container {
   display: flex;
   gap: 1.5em;
-  padding: 0em 3.5em 0 3.5em;
+  padding: 0 3.5em;
+}
+
+.column-container-overflow {
+  display: flex;
+  gap: 0.56em;
+  padding: 0 2.56em 0 3.5em;
+  height: 94vh;
 }
 
 .columns {
@@ -233,13 +244,10 @@ input:checked + .slider:before {
   width: 25vw;
 }
 
-.columns:hover {
-  cursor: pointer;
-}
-
 .columns-overflow {
   display: flex;
   overflow-y: scroll;
+
   flex-direction: column;
   gap: 1.3em;
   width: 25vw;
@@ -253,6 +261,175 @@ input:checked + .slider:before {
   visibility: visible;
 }
 
-img {
+.content-columns {
+  position: relative;
+}
+
+.content-columns:hover {
+  cursor: pointer;
+}
+
+.content-columns:hover .art-info {
+  opacity: 100%;
+
+  transition: opacity 0.3s ease-in-out;
+}
+
+.art-info {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: space-evenly;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.603), rgba(0, 0, 0, 0.925) 80%);
+  height: 75px;
+  opacity: 0;
+  padding: 0 1em;
+
+  transition: opacity 0.3s ease-in-out;
+}
+
+.author-container {
+  display: flex;
+  flex-basis: 70%;
+  gap: 1em;
+
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.thumbnail {
+  height: 35px;
+  width: 35px;
+  border-radius: 100px;
+  background-size: cover;
+  background-position: center;
+}
+
+.svg-container {
+  display: flex;
+  flex-basis: 30%;
+  gap: 1em;
+  justify-content: flex-end;
+}
+
+.plus,
+.heart,
+.checkmark {
+  filter: invert(100%) sepia(4%) saturate(4%) hue-rotate(49deg) brightness(103%) contrast(100%);
+  width: 30px;
+}
+
+.checkmark {
+  display: none;
+}
+
+/*#############################################
+            LARGE IMAGE PREVIEW
+##############################################*/
+
+#image-preview-outside-container {
+  position: fixed;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow-y: hidden;
+  z-index: 10;
+  height: 100vh;
   width: 100%;
+  padding-top: 3em;
+  background: rgba(0, 0, 0, 0.541);
+}
+
+.arrow-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 10vw;
+}
+
+.left-arrow-section {
+  display: flex;
+  justify-content: center;
+  padding-right: 1em;
+}
+
+.left-arrow-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.right-arrow-close-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 1em;
+}
+
+.close-window-section {
+  position: absolute;
+  top: 0;
+}
+
+.close-window.container {
+  position: absolute;
+  top: 0;
+}
+
+.close {
+  width: 1.5em;
+  filter: invert(97%) sepia(97%) saturate(12%) hue-rotate(219deg) brightness(103%) contrast(103%);
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+.right-arrow-section {
+  display: flex;
+}
+
+.arrow {
+  width: 2em;
+  filter: invert(97%) sepia(97%) saturate(12%) hue-rotate(219deg) brightness(103%) contrast(103%);
+}
+
+.arrow:hover {
+  cursor: pointer;
+}
+
+.large-image-hidden {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60vw;
+  height: 100%;
+  padding: 0 1em 3em 1em;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background: white;
+}
+
+.image-preview-header {
+  height: 3em;
+  width: 100%;
+  background: red;
+}
+
+.image-container {
+  display: flex;
+  height: 80%;
+  width: 100%;
+  justify-content: center;
+}
+
+.preview-image {
+  height: 100%;
 }

@@ -4,20 +4,22 @@ const columnTwo = document.querySelector(".column-two");
 const columnThree = document.querySelector(".column-three");
 const columnFour = document.querySelector(".column-four");
 const colSelector = document.querySelectorAll(".col-selector");
+const columnContainer = document.querySelector("#column-container");
 const searchFieldNav = document.querySelector(".nav-search");
 const searchFieldHeading = document.querySelector(".heading-search");
 const inputs = document.querySelectorAll("input");
 const magnifyingGlass = document.querySelectorAll(".search-icon");
 const toggle = document.querySelector(".switch").firstElementChild;
-const columnContainer = document.querySelector("#column-container");
+const authorContainer = document.querySelector(".author-container");
+const plusIcon = document.querySelector(".plus");
+const heartIcon = document.querySelector(".heart");
+const checkmarkIcon = document.querySelector(".checkmark");
+const popupContainer = document.querySelector("#popup");
 
 let i = 1;
 let j = 50;
-let search = `landscape people`;
-let toggleChecked = false;
-let scrollTopArray = [];
-let wheelDeltaY = null;
-let mouseoverCurrentTarget = null;
+let search = `landscape`;
+let scrollTop = null;
 
 window.onload = () => {
   loadDoc(i, search);
@@ -38,7 +40,7 @@ window.onload = () => {
 
   document.addEventListener("scroll", (e) => {
     const scrollPositionPercentage = (document.documentElement.offsetHeight - (document.documentElement.scrollTop + 1005)) / document.documentElement.offsetHeight;
-    // console.log(scrollPositionPercentage.toFixed(1), j);
+
     if (j === 260 || j === 261 || j === 262 || j === 263 || j === 264 || j === 265 || scrollPositionPercentage === 0) {
       j = 50;
       ++i;

@@ -5,6 +5,7 @@ function loadDoc(num, searchValue) {
       //   console.log(JSON.parse(xhttp.response));
 
       const jsonData = JSON.parse(xhttp.response);
+      console.log(jsonData);
 
       const images = jsonData.photos.map((photo) => {
         return photo.src.large2x;
@@ -15,7 +16,19 @@ function loadDoc(num, searchValue) {
         contentColumns.classList.add("content-columns");
 
         contentColumns.innerHTML = `
-                <img srcset="${images[i]}" alt='photo'/>
+               <img srcset="${images[i]}" alt='photo'/>
+               <div class='art-info'>
+                  <div class='author-container'>
+                      <div class='thumbnail' style='background-image:url(${jsonData.photos[i].src.tiny});'></div>
+                      <p>${jsonData.photos[i].photographer}</p>
+                  </div>
+                  <div class='svg-container'>
+                      <img class='plus' srcset="images/plus.svg"/>
+                      <img class='heart' srcset='images/heart.svg'/>
+                      <img class='checkmark' srcset='images/checkmark.svg'/>
+                  </div>
+                  </div>
+                  
                 `;
         columnOne.appendChild(contentColumns);
       }
@@ -25,7 +38,19 @@ function loadDoc(num, searchValue) {
         contentColumns.classList.add("content-columns");
 
         contentColumns.innerHTML = `
-              <img srcset="${images[i]}" alt='photo'/>
+                <img srcset="${images[i]}" alt='photo'/>
+               <div class='art-info'>
+                  <div class='author-container'>
+                      <div class='thumbnail' style='background-image:url(${jsonData.photos[i].src.tiny});'></div>
+                      <p>${jsonData.photos[i].photographer}</p>
+                  </div>
+                  <div class='svg-container'>
+                      <img class='plus' srcset="images/plus.svg"/>
+                      <img class='heart' srcset='images/heart.svg'/>
+                      <img class='checkmark' srcset='images/checkmark.svg'/>
+                  </div>
+                </div>
+                  
               `;
         columnTwo.appendChild(contentColumns);
       }
@@ -35,7 +60,21 @@ function loadDoc(num, searchValue) {
         contentColumns.classList.add("content-columns");
 
         contentColumns.innerHTML = `
-              <img srcset="${images[i]}" alt='photo'/>
+                <img srcset="${images[i]}" alt='photo'/>
+               <div class='art-info'>
+                  <div class='author-container'>
+                      <div class='thumbnail' style='background-image:url(${jsonData.photos[i].src.tiny});'></div>
+                      <p>${jsonData.photos[i].photographer}</p>
+                  </div>
+                  <div class='svg-container'>
+                      <img class='plus' srcset="images/plus.svg"/>
+                      <img class='heart' srcset='images/heart.svg'/>
+                      <img class='checkmark' srcset='images/checkmark.svg'/>
+                      
+                  </div>
+                  
+               </div>
+               
               `;
         columnThree.appendChild(contentColumns);
       }
@@ -45,8 +84,22 @@ function loadDoc(num, searchValue) {
         contentColumns.classList.add("content-columns");
 
         contentColumns.innerHTML = `
-              <img srcset="${images[i]}" alt='photo'/>
+                <img class='main-image' srcset="${images[i]}" alt='photo'/>
+               <div class='art-info'>
+                  <div class='author-container'>
+                      <div class='thumbnail' style='background-image:url(${jsonData.photos[i].src.tiny});'></div>
+                      <p class='author'>${jsonData.photos[i].photographer}</p>
+                  </div>
+                  <div class='svg-container'>
+                      <img class='plus' srcset="images/plus.svg"/>
+                      <img class='heart' srcset='images/heart.svg'/>
+                      <img class='checkmark' srcset='images/checkmark.svg'/>
+                  </div>
+                  
+               </div>
+               
               `;
+
         columnFour.appendChild(contentColumns);
       }
     }
@@ -74,25 +127,32 @@ function columnReload() {
 
 function toggleConditional() {
   if (toggle.checked === true) {
+    scrollTop = document.documentElement.scrollTop;
+
+    console.log(scrollTop);
     for (let col of colSelector) {
       col.classList.add("columns-overflow");
       col.classList.remove("columns");
+      setTimeout(() => {
+        col.scrollTop = scrollTop - 606;
+      }, 1);
     }
-    columnContainer.style.gap = ".5em";
-    columnContainer.style.padding = ".4em 2.57em 0 3.5em";
-    columnContainer.style.height = "94vh";
+
+    columnContainer.classList.add("column-container-overflow");
+    columnContainer.classList.remove("column-container");
   } else {
+    console.log(scrollTop);
+
+    setTimeout(() => {
+      document.body.parentElement.scrollTop = scrollTop;
+    }, 1);
+    console.log(scrollTop);
     for (let col of colSelector) {
       col.classList.remove("columns-overflow");
       col.classList.add("columns");
     }
-    columnContainer.style.gap = "1.5em";
-    columnContainer.style.padding = ".4em 3.5em 0 3.5em";
-    columnContainer.style.height = "fit-content";
+
+    columnContainer.classList.add("column-container");
+    columnContainer.classList.remove("column-container-overflow");
   }
 }
-
-// scrollTopArray = [];
-// console.log(scrollTopArray);
-// console.log(columnOne.scrollTop, columnTwo.scrollTop, columnThree.scrollTop);
-// columnFour.removeEventListener("wheel", columnFourEvent, true);
