@@ -4,19 +4,13 @@ function loadDoc(num, searchValue) {
     if (this.readyState == 4 && this.status == 200) {
       const jsonData = JSON.parse(xhttp.response);
 
-      console.log(jsonData.photos.length);
-
-      let numOfPhotosReturned = jsonData.photos.length;
-
-      const images = jsonData.photos.map((photo) => {
+      images = jsonData.photos.map((photo) => {
         return photo.src.large2x;
       });
 
-      let distribution = numOfPhotosReturned / columns.length;
+      console.log(photoArray);
 
-      console.log(distribution, images);
-
-      for (let i = 0; i < 10; ++i) {
+      for (let i = 0; i < images.length; ++i) {
         const contentColumns = document.createElement("div");
         contentColumns.classList.add("content-columns");
 
@@ -35,77 +29,29 @@ function loadDoc(num, searchValue) {
                   </div>
                   
                 `;
-        columnOne.appendChild(contentColumns);
-      }
 
-      for (let i = 10; i < 20; ++i) {
-        const contentColumns = document.createElement("div");
-        contentColumns.classList.add("content-columns");
-
-        contentColumns.innerHTML = `
-                <img src="${images[i]}" alt='photo'/>
-               <div class='art-info'>
-                  <div class='author-container'>
-                      <div class='thumbnail' style='background-image:url(${jsonData?.photos[i]?.src?.tiny});'></div>
-                      <p>${jsonData?.photos[i]?.photographer}</p>
-                  </div>
-                  <div class='svg-container'>
-                      <img class='plus' src="images/plus.svg"/>
-                      <img class='heart' src='images/heart.svg'/>
-                      <img class='checkmark' src='images/checkmark.svg'/>
-                  </div>
-                </div>
-                  
-              `;
-        columnTwo.appendChild(contentColumns);
-      }
-
-      for (let i = 20; i < 30; ++i) {
-        const contentColumns = document.createElement("div");
-        contentColumns.classList.add("content-columns");
-
-        contentColumns.innerHTML = `
-                <img src="${images[i]}" alt='photo'/>
-               <div class='art-info'>
-                  <div class='author-container'>
-                      <div class='thumbnail' style='background-image:url(${jsonData?.photos[i]?.src?.tiny});'></div>
-                      <p>${jsonData?.photos[i]?.photographer}</p>
-                  </div>
-                  <div class='svg-container'>
-                      <img class='plus' src="images/plus.svg"/>
-                      <img class='heart' src='images/heart.svg'/>
-                      <img class='checkmark' src='images/checkmark.svg'/>
-                      
-                  </div>
-                  
-               </div>
-               
-              `;
-        columnThree.appendChild(contentColumns);
-      }
-
-      for (let i = 30; i < 40; ++i) {
-        const contentColumns = document.createElement("div");
-        contentColumns.classList.add("content-columns");
-
-        contentColumns.innerHTML = `
-                <img src="${images[i]}" alt='photo'/>
-               <div class='art-info'>
-                  <div class='author-container'>
-                      <div class='thumbnail' style='background-image:url(${jsonData?.photos[i]?.src?.tiny});'></div>
-                      <p class='author'>${jsonData?.photos[i]?.photographer}</p>
-                  </div>
-                  <div class='svg-container'>
-                      <img class='plus' src="images/plus.svg"/>
-                      <img class='heart' src='images/heart.svg'/>
-                      <img class='checkmark' src='images/checkmark.svg'/>
-                  </div>
-                  
-               </div>
-               
-              `;
-
-        columnFour.appendChild(contentColumns);
+        switch (columnNum) {
+          case 1:
+            columnOne.appendChild(contentColumns);
+            photoArray.push(images[i]);
+            columnNum++;
+            break;
+          case 2:
+            columnTwo.appendChild(contentColumns);
+            photoArray.push(images[i]);
+            columnNum++;
+            break;
+          case 3:
+            columnThree.appendChild(contentColumns);
+            photoArray.push(images[i]);
+            columnNum++;
+            break;
+          case 4:
+            columnFour.appendChild(contentColumns);
+            photoArray.push(images[i]);
+            columnNum = 1;
+            break;
+        }
       }
 
       /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,14 +65,15 @@ function loadDoc(num, searchValue) {
           img.addEventListener("click", () => {
             document.querySelector("#image-preview-outside-container").style = "visibility: visible";
 
-            let selectedImage = img.attributes[0].value;
+            selectedImage = img.attributes[0].value;
 
             imageContainer.innerHTML = `
             <img class='preview-image' src='${selectedImage}' alt='photo'/>
             `;
 
+            magnify();
             disableScroll();
-            buildPhotoArray();
+            console.log(photoArray);
           });
         }
       });
@@ -157,24 +104,9 @@ function columnReload() {
   });
 }
 
-/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-CREATING PHOTO ARRAY TO HORIZONTALLY MOVE THROUGH WITHIN IMAGE PREVIEW
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-
-function buildPhotoArray() {
-  photoArray = [];
-
-  for (let numOfImages = 0; numOfImages < columnOne.children.length; numOfImages++) {
-    if (columnOne.childNodes[numOfImages].innerHTML !== "" && columnTwo.childNodes[numOfImages].innerHTML !== "" && columnThree.childNodes[numOfImages].innerHTML !== "" && columnFour.childNodes[numOfImages].innerHTML !== "") {
-      photoArray.push(columnOne.children[numOfImages].children[0].attributes[0].value, columnTwo.children[numOfImages].children[0].attributes[0].value, columnThree.children[numOfImages].children[0].attributes[0].value, columnFour.children[numOfImages].children[0].attributes[0].value);
-    }
-  }
-  console.log(photoArray);
-}
-
-/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 SCROLL TOGGLE FUNCTIONALITY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 function toggleConditional() {
   if (toggle.checked === true) {
@@ -209,7 +141,7 @@ function toggleConditional() {
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        TO DISABLE SCROLL WHILE IMAGE PREVIEW IS VISIBLE
+        TO DISABLE SCROLL WHILE PREVIEW IMAGE IS VISIBLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 function preventDefault(e) {
@@ -252,6 +184,166 @@ function enableScroll() {
   window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
 }
 
-// function notEnough () {
-//   if()
-// }
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            CYCLING THROUGH PHOTO ARRAY WITH PREVIEW IMAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+function imageCycle() {
+  photoArray.forEach((photo, index) => {
+    if (photo === selectedImage) {
+      selectedImage = index;
+    }
+  });
+}
+
+function cycleLeft(target) {
+  if (target.classList[1] === "left-arrow") {
+    if (selectedImage > 0) {
+      selectedImage--;
+      imageContainer.innerHTML = `
+              <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
+              `;
+      magnify();
+    }
+  }
+}
+
+function cycleRight(target) {
+  if (target.classList[1] === "right-arrow") {
+    if (selectedImage < photoArray.length - 1) {
+      selectedImage++;
+      imageContainer.innerHTML = `
+              <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
+              `;
+      magnify();
+    }
+  }
+}
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                  MAGNIFYING TOOL FOR PREVIEW IMAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+console.log(imageContainer);
+
+function magnify() {
+  const previewImage = document.querySelector(".preview-image");
+  let previewMagContainer = null;
+
+  previewImage.addEventListener("click", (e) => {
+    let width = Number(previewImage.clientWidth) + "px";
+    let height = Number(previewImage.clientHeight) + "px";
+
+    // console.log(e, "enter");
+
+    // console.log(height, width, selectedImage);
+
+    imageContainer.innerHTML = `
+    
+            <img id='class='preview-image' style='visibility:hidden; src='${selectedImage}' alt='photo'/>
+
+            <div class='mag-image' style='height:${height}; width:${width}; background:url(${selectedImage})'></div>
+            
+            `;
+  });
+
+  previewImage.addEventListener("mouseleave", (e) => {
+    console.log(e, "leave");
+  });
+
+  previewImage.addEventListener("mousemove", (e) => {
+    console.log(e.x, e.y, "move");
+  });
+}
+
+// const imageSelection = document.querySelector("#myimage");
+
+// imageSelection.addEventListener("click", (e) => {
+//   let currentPhotoId = e.currentTarget.attributes[0].value;
+//   let currentPhotoSrc = e.currentTarget.attributes[1].value;
+//   console.log(String(currentPhotoId), String(currentPhotoSrc));
+
+//   function magnify(imgID, zoom) {
+//     var img,
+//       glass,
+//       width,
+//       height,
+//       i = 2;
+
+//     img = document.getElementById(imgID);
+
+//     /*create magnifier glass:*/
+//     glass = document.createElement("div");
+//     glass.setAttribute("class", "img-magnifier-glass");
+//     glass.style.display = "flex";
+//     glass.addEventListener("click", (e) => {
+//       glass.style.display = "none";
+//     });
+
+//     /*insert magnifier glass:*/
+//     img.parentElement.insertBefore(glass, img);
+
+//     /*set background properties for the magnifier glass:*/
+//     glass.style.backgroundImage = "url('" + img.src + "')";
+//     glass.style.backgroundRepeat = "no-repeat";
+//     glass.style.backgroundSize = img.width * zoom + "px " + img.height * zoom + "px";
+//     width = glass.offsetWidth / 2;
+//     height = glass.offsetHeight / 2;
+
+//     /*execute a function when someone moves the magnifier glass over the image:*/
+//     glass.addEventListener("mousemove", moveMagnifier);
+//     img.addEventListener("mousemove", moveMagnifier);
+
+//     function moveMagnifier(e) {
+//       var pos, x, y;
+
+//       /*prevent any other actions that may occur when moving over the image*/
+//       e.preventDefault();
+
+//       /*get the cursor's x and y positions:*/
+//       pos = getCursorPos(e);
+//       x = pos.x;
+//       y = pos.y;
+
+//       /*prevent the magnifier glass from being positioned outside the image:*/
+//       if (x > img.width - width / zoom) {
+//         x = img.width - width / zoom;
+//       }
+//       if (x < width / zoom) {
+//         x = width / zoom;
+//       }
+//       if (y > img.height - height / zoom) {
+//         y = img.height - height / zoom;
+//       }
+//       if (y < height / zoom) {
+//         y = height / zoom;
+//       }
+
+//       /*set the position of the magnifier glass:*/
+//       glass.style.left = x - width + "px";
+//       glass.style.top = y - height + "px";
+
+//       /*display what the magnifier glass "sees":*/
+//       glass.style.backgroundPosition = "-" + (x * zoom - width) + "px -" + (y * zoom - height) + "px";
+//     }
+//     function getCursorPos(e) {
+//       var a,
+//         x = 0,
+//         y = 0;
+//       e = e || window.event;
+
+//       /*get the x and y positions of the image:*/
+//       a = img.getBoundingClientRect();
+
+//       /*calculate the cursor's x and y coordinates, relative to the image:*/
+//       x = e.pageX - a.left;
+//       y = e.pageY - a.top;
+
+//       /*consider any page scrolling:*/
+//       x = x - window.pageXOffset;
+//       y = y - window.pageYOffset;
+//       return { x: x, y: y };
+//     }
+//   }
+//   magnify(currentPhotoId, 4);
+// });

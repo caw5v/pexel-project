@@ -19,14 +19,22 @@ const heartIcon = document.querySelector(".heart");
 const checkmarkIcon = document.querySelector(".checkmark");
 const closeWindowContainer = document.querySelector(".close-window-container");
 const imageContainer = document.querySelector(".image-container");
+const leftArrow = document.querySelector(".left-arrow");
+const rightArrow = document.querySelector(".right-arrow");
 const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
 let i = 1;
 let j = 50;
+let columnNum = 1;
 let search = `landscape`;
 let scrollTop = null;
 let supportsPassive = false;
 let photoArray = [];
+let booleanArray = [];
+let images = null;
+let selectedImage = null;
+let imageHeight = null;
+let imageWidth = null;
 
 window.onload = () => {
   loadDoc(i, search);
@@ -65,6 +73,8 @@ inputs.forEach((input) => {
 
       i = 1;
 
+      photoArray = [];
+
       columnReload();
 
       loadDoc(i, search);
@@ -87,13 +97,21 @@ magnifyingGlass.forEach((glass) => {
   });
 });
 
-toggle.addEventListener("click", (e) => {
+toggle.addEventListener("click", () => {
   toggleConditional();
 });
 
 closeWindowContainer.addEventListener("click", () => {
   document.querySelector("#image-preview-outside-container").style = "visibility: hidden";
   enableScroll();
-  photoArray = [];
-  console.log(photoArray);
+});
+
+leftArrow.addEventListener("click", (e) => {
+  imageCycle();
+  cycleLeft(e.currentTarget);
+});
+
+rightArrow.addEventListener("click", (e) => {
+  imageCycle();
+  cycleRight(e.currentTarget);
 });
