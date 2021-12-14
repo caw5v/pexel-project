@@ -71,7 +71,9 @@ function loadDoc(num, searchValue) {
             <img class='preview-image' src='${selectedImage}' alt='photo'/>
             `;
 
-            magnify();
+            previewImageSelection = document.querySelector(".preview-image");
+
+            magnifyPreviewImage(previewImageSelection);
             disableScroll();
             console.log(photoArray);
           });
@@ -203,7 +205,10 @@ function cycleLeft(target) {
       imageContainer.innerHTML = `
               <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
               `;
-      magnify();
+
+      previewImageSelection = document.querySelector(".preview-image");
+
+      magnifyPreviewImage(previewImageSelection);
     }
   }
 }
@@ -215,7 +220,10 @@ function cycleRight(target) {
       imageContainer.innerHTML = `
               <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
               `;
-      magnify();
+
+      previewImageSelection = document.querySelector(".preview-image");
+
+      magnifyPreviewImage(previewImageSelection);
     }
   }
 }
@@ -223,127 +231,96 @@ function cycleRight(target) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                   MAGNIFYING TOOL FOR PREVIEW IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+function magnifyPreviewImage(element) {
+  element.addEventListener("click", (e) => {
+    let currentPhotoClass = e.currentTarget.attributes[0].value;
+    let currentPhotoSrc = e.currentTarget.attributes[1].value;
 
-console.log(imageContainer);
+    console.log(currentPhotoClass, currentPhotoSrc);
 
-function magnify() {
-  const previewImage = document.querySelector(".preview-image");
-  let previewMagContainer = null;
+    function magnify(imageClass, zoom) {
+      var img,
+        glass,
+        width,
+        height,
+        i = 2;
 
-  previewImage.addEventListener("click", (e) => {
-    let width = Number(previewImage.clientWidth) + "px";
-    let height = Number(previewImage.clientHeight) + "px";
+      img = document.querySelector("." + imageClass);
+      console.log(img);
 
-    // console.log(e, "enter");
+      /*create magnifier glass:*/
+      glass = document.createElement("div");
+      glass.setAttribute("class", "img-magnifier-glass");
+      glass.style.display = "flex";
+      glass.addEventListener("click", (e) => {
+        glass.style.display = "none";
+      });
 
-    // console.log(height, width, selectedImage);
+      /*insert magnifier glass:*/
+      img.parentElement.insertBefore(glass, img);
 
-    imageContainer.innerHTML = `
-    
-            <img id='class='preview-image' style='visibility:hidden; src='${selectedImage}' alt='photo'/>
+      /*set background properties for the magnifier glass:*/
+      glass.style.backgroundImage = "url('" + img.src + "')";
+      glass.style.backgroundRepeat = "no-repeat";
+      glass.style.backgroundSize = img.width * zoom + "px " + img.height * zoom + "px";
+      width = glass.offsetWidth / 2;
+      height = glass.offsetHeight / 2;
 
-            <div class='mag-image' style='height:${height}; width:${width}; background:url(${selectedImage})'></div>
-            
-            `;
-  });
+      /*execute a function when someone moves the magnifier glass over the image:*/
+      glass.addEventListener("mousemove", moveMagnifier);
+      img.addEventListener("mousemove", moveMagnifier);
 
-  previewImage.addEventListener("mouseleave", (e) => {
-    console.log(e, "leave");
-  });
+      function moveMagnifier(e) {
+        var pos, x, y;
 
-  previewImage.addEventListener("mousemove", (e) => {
-    console.log(e.x, e.y, "move");
+        /*prevent any other actions that may occur when moving over the image*/
+        e.preventDefault();
+
+        /*get the cursor's x and y positions:*/
+        pos = getCursorPos(e);
+        x = pos.x;
+        y = pos.y;
+
+        /*prevent the magnifier glass from being positioned outside the image:*/
+        if (x > img.width - width / zoom) {
+          x = img.width - width / zoom;
+        }
+        if (x < width / zoom) {
+          x = width / zoom;
+        }
+        if (y > img.height - height / zoom) {
+          y = img.height - height / zoom;
+        }
+        if (y < height / zoom) {
+          y = height / zoom;
+        }
+
+        /*set the position of the magnifier glass:*/
+        glass.style.left = x - width + "px";
+        glass.style.top = y - height + "px";
+
+        /*display what the magnifier glass "sees":*/
+        glass.style.backgroundPosition = "-" + (x * zoom - width) + "px -" + (y * zoom - height) + "px";
+      }
+      function getCursorPos(e) {
+        var a,
+          x = 0,
+          y = 0;
+        e = e || window.event;
+
+        /*get the x and y positions of the image:*/
+        a = img.getBoundingClientRect();
+
+        /*calculate the cursor's x and y coordinates, relative to the image:*/
+        x = e.pageX - a.left;
+        y = e.pageY - a.top;
+
+        /*consider any page scrolling:*/
+        x = x - window.pageXOffset;
+        y = y - window.pageYOffset;
+        return { x: x, y: y };
+      }
+    }
+    magnify(currentPhotoClass, 3);
   });
 }
-
-// const imageSelection = document.querySelector("#myimage");
-
-// imageSelection.addEventListener("click", (e) => {
-//   let currentPhotoId = e.currentTarget.attributes[0].value;
-//   let currentPhotoSrc = e.currentTarget.attributes[1].value;
-//   console.log(String(currentPhotoId), String(currentPhotoSrc));
-
-//   function magnify(imgID, zoom) {
-//     var img,
-//       glass,
-//       width,
-//       height,
-//       i = 2;
-
-//     img = document.getElementById(imgID);
-
-//     /*create magnifier glass:*/
-//     glass = document.createElement("div");
-//     glass.setAttribute("class", "img-magnifier-glass");
-//     glass.style.display = "flex";
-//     glass.addEventListener("click", (e) => {
-//       glass.style.display = "none";
-//     });
-
-//     /*insert magnifier glass:*/
-//     img.parentElement.insertBefore(glass, img);
-
-//     /*set background properties for the magnifier glass:*/
-//     glass.style.backgroundImage = "url('" + img.src + "')";
-//     glass.style.backgroundRepeat = "no-repeat";
-//     glass.style.backgroundSize = img.width * zoom + "px " + img.height * zoom + "px";
-//     width = glass.offsetWidth / 2;
-//     height = glass.offsetHeight / 2;
-
-//     /*execute a function when someone moves the magnifier glass over the image:*/
-//     glass.addEventListener("mousemove", moveMagnifier);
-//     img.addEventListener("mousemove", moveMagnifier);
-
-//     function moveMagnifier(e) {
-//       var pos, x, y;
-
-//       /*prevent any other actions that may occur when moving over the image*/
-//       e.preventDefault();
-
-//       /*get the cursor's x and y positions:*/
-//       pos = getCursorPos(e);
-//       x = pos.x;
-//       y = pos.y;
-
-//       /*prevent the magnifier glass from being positioned outside the image:*/
-//       if (x > img.width - width / zoom) {
-//         x = img.width - width / zoom;
-//       }
-//       if (x < width / zoom) {
-//         x = width / zoom;
-//       }
-//       if (y > img.height - height / zoom) {
-//         y = img.height - height / zoom;
-//       }
-//       if (y < height / zoom) {
-//         y = height / zoom;
-//       }
-
-//       /*set the position of the magnifier glass:*/
-//       glass.style.left = x - width + "px";
-//       glass.style.top = y - height + "px";
-
-//       /*display what the magnifier glass "sees":*/
-//       glass.style.backgroundPosition = "-" + (x * zoom - width) + "px -" + (y * zoom - height) + "px";
-//     }
-//     function getCursorPos(e) {
-//       var a,
-//         x = 0,
-//         y = 0;
-//       e = e || window.event;
-
-//       /*get the x and y positions of the image:*/
-//       a = img.getBoundingClientRect();
-
-//       /*calculate the cursor's x and y coordinates, relative to the image:*/
-//       x = e.pageX - a.left;
-//       y = e.pageY - a.top;
-
-//       /*consider any page scrolling:*/
-//       x = x - window.pageXOffset;
-//       y = y - window.pageYOffset;
-//       return { x: x, y: y };
-//     }
-//   }
-//   magnify(currentPhotoId, 4);
-// });

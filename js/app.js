@@ -35,6 +35,7 @@ let images = null;
 let selectedImage = null;
 let imageHeight = null;
 let imageWidth = null;
+let previewImageSelection = null;
 
 window.onload = () => {
   loadDoc(i, search);
