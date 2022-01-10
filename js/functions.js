@@ -245,7 +245,7 @@ function magnifyPreviewImage(element) {
         height,
         i = 2;
 
-      img = document.querySelector("." + imageClass);
+      img = document.querySelector(`.${imageClass}`);
       console.log(img);
 
       /*create magnifier glass:*/
