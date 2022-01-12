@@ -83,6 +83,8 @@ inputs.forEach((input) => {
       i = 1;
 
       photoArray = [];
+      photoArrayHd = [];
+      photoArrayOriginal = [];
 
       columnReload();
 
@@ -96,6 +98,10 @@ magnifyingGlass.forEach((glass) => {
     const magnifyingGlass = glass.parentElement.childNodes[1].value.trim();
     if (magnifyingGlass) {
       i = 1;
+
+      photoArray = [];
+      photoArrayHd = [];
+      photoArrayOriginal = [];
 
       search = magnifyingGlass;
 
