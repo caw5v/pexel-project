@@ -18,7 +18,7 @@ body {
   padding: 0.5em 1em;
   color: white;
   font-weight: bold;
-  background: rgb(28, 42, 54);
+  background: rgba(28, 42, 54, 0);
 }
 
 .body-no-scroll-nav {
@@ -68,7 +68,7 @@ body {
 
 .nav-search-visible {
   position: relative;
-  visibility: visible;
+  visibility: hidden;
   /* padding: 1.5em 1.2em 0.9em 1.2em; */
   padding: 1.1em 1em 0.9em 1em;
   color: rgb(87, 87, 87);
@@ -89,7 +89,7 @@ body {
 
 .search-icon {
   position: absolute;
-
+  visibility: hidden;
   top: 0.9em;
   right: 0.5em;
   width: 1.5em;
@@ -101,18 +101,28 @@ body {
 
 .hero {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   color: white;
   height: 60vh;
   width: 100%;
-  background-image: url(https://images.pexels.com/photos/8747714/pexels-photo-8747714.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
+  background-color: rgb(72, 119, 98);
   background-position: center;
   background-size: cover;
+  filter: saturate(110%);
+}
+
+.hero-filter-div {
+  position: absolute;
+  inset: 0;
+  background: black;
+  filter: opacity(25%);
 }
 
 .heading-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: space-between;
   width: 35%;
@@ -436,8 +446,29 @@ input:checked + .slider:before {
 }
 
 .image-preview-header {
+  position: relative;
+
   width: 100%;
   height: 5em;
+}
+
+.art-info-preview-image {
+  position: relative;
+  display: flex;
+}
+
+.thumbnail-preview-image {
+  height: 35px;
+  width: 35px;
+  border-radius: 100px;
+  background-size: cover;
+  background-position: center;
+}
+
+.plus-preview-image,
+.checkmark-preview-image,
+.heart-preview-image {
+  width: 30px;
 }
 
 .image-container {
@@ -453,43 +484,17 @@ input:checked + .slider:before {
 }
 
 .preview-image {
+  position: relative;
   max-width: 100%;
   max-height: 100%;
+  top: 0px;
+  left: 0px;
 }
 
-.preview-image:hover {
+.hover {
   cursor: zoom-in;
 }
 
-.mag-image {
-  background-position: center;
-  background-size: 200%;
-}
-
-/* magnifier styles */
-
-.img-magnifier-container {
-  width: fit-content;
-  height: fit-content;
-  border: 3px solid green;
-}
-
-.img-magnifier-glass {
-  display: none;
-  position: absolute;
-  z-index: 10;
-  border-radius: 100%;
-  cursor: pointer;
-
-  width: 800px;
-  height: 800px;
-}
-
-.main-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 90vh;
-  width: 70%;
+.zoom {
+  cursor: zoom-out;
 }

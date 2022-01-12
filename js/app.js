@@ -22,20 +22,28 @@ const imageContainer = document.querySelector(".image-container");
 const leftArrow = document.querySelector(".left-arrow");
 const rightArrow = document.querySelector(".right-arrow");
 const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+const initialCategories = ["nature", "landscape", "city", "family", "animals"];
+const randomNumFive = Math.floor(Math.random() * 5);
+const randomNumForty = Math.floor(Math.random() * 40);
+const imagePreviewHeader = document.querySelector(".image-preview-header");
 
+let jsonData = null;
 let i = 1;
 let j = 50;
 let columnNum = 1;
-let search = `landscape`;
+let search = initialCategories[randomNumFive];
 let scrollTop = null;
 let supportsPassive = false;
 let photoArray = [];
+let photoArrayHd = [];
+let photoArrayOriginal = [];
 let booleanArray = [];
 let images = null;
 let selectedImage = null;
 let imageHeight = null;
 let imageWidth = null;
 let previewImageSelection = null;
+let mousePositionArray = [];
 
 window.onload = () => {
   loadDoc(i, search);
@@ -104,6 +112,8 @@ toggle.addEventListener("click", () => {
 
 closeWindowContainer.addEventListener("click", () => {
   document.querySelector("#image-preview-outside-container").style = "visibility: hidden";
+  document.querySelector(".preview-image").style = "transition: none";
+
   enableScroll();
 });
 

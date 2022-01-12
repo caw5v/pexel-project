@@ -2,13 +2,21 @@ function loadDoc(num, searchValue) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      const jsonData = JSON.parse(xhttp.response);
+      jsonData = JSON.parse(xhttp.response);
 
       images = jsonData.photos.map((photo) => {
+        return photo.src.large;
+      });
+
+      imagesHd = jsonData.photos.map((photo) => {
         return photo.src.large2x;
       });
 
-      console.log(photoArray);
+      originalResolution = jsonData.photos.map((photo) => {
+        return photo.src.original;
+      });
+
+      document.querySelector(".hero").style.backgroundImage = `url(images/photos/pexels-ricardo-esquivel-1563256.jpeg)`;
 
       for (let i = 0; i < images.length; ++i) {
         const contentColumns = document.createElement("div");
@@ -34,26 +42,35 @@ function loadDoc(num, searchValue) {
           case 1:
             columnOne.appendChild(contentColumns);
             photoArray.push(images[i]);
+            photoArrayHd.push(imagesHd[i]);
+            photoArrayOriginal.push(originalResolution[i]);
             columnNum++;
             break;
           case 2:
             columnTwo.appendChild(contentColumns);
             photoArray.push(images[i]);
+            photoArrayHd.push(imagesHd[i]);
+            photoArrayOriginal.push(originalResolution[i]);
             columnNum++;
             break;
           case 3:
             columnThree.appendChild(contentColumns);
             photoArray.push(images[i]);
+            photoArrayHd.push(imagesHd[i]);
+            photoArrayOriginal.push(originalResolution[i]);
             columnNum++;
             break;
           case 4:
             columnFour.appendChild(contentColumns);
             photoArray.push(images[i]);
+            photoArrayHd.push(imagesHd[i]);
+            photoArrayOriginal.push(originalResolution[i]);
             columnNum = 1;
             break;
         }
       }
 
+      console.log("original", photoArrayOriginal, "Hd", photoArrayHd, "normal", photoArray);
       /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             ATTACHING EVENT LISTENERS TO & INSERTING ACTUAL PHOTOS
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -67,15 +84,32 @@ function loadDoc(num, searchValue) {
 
             selectedImage = img.attributes[0].value;
 
+            let indexSelectedImage = photoArray.indexOf(selectedImage);
+
+            imagePreviewHeader.innerHTML = `
+                <div class='art-info-preview-image'>
+                  <div class='author-container-preview-image'>
+                      <div class='thumbnail-preview-image' style='background-image:url(${jsonData?.photos[i]?.src?.tiny});'></div>
+                      <p>hello</p>
+                  </div>
+                  <div class='svg-container'>
+                      <img class='plus-preview-image' src="images/plus.svg"/>
+                      <img class='heart-preview-image' src='images/heart.svg'/>
+                      <img class='checkmark-preview-image' src='images/checkmark.svg'/>
+                  </div>
+                  <button></button>
+                  </div>
+            `;
+
             imageContainer.innerHTML = `
-            <img class='preview-image' src='${selectedImage}' alt='photo'/>
+            <img class='preview-image' src='${photoArrayHd[indexSelectedImage]}' alt='photo'/>
+         
             `;
 
             previewImageSelection = document.querySelector(".preview-image");
 
             magnifyPreviewImage(previewImageSelection);
             disableScroll();
-            console.log(photoArray);
           });
         }
       });
@@ -194,6 +228,7 @@ function imageCycle() {
   photoArray.forEach((photo, index) => {
     if (photo === selectedImage) {
       selectedImage = index;
+      console.log(selectedImage, "right here");
     }
   });
 }
@@ -203,7 +238,7 @@ function cycleLeft(target) {
     if (selectedImage > 0) {
       selectedImage--;
       imageContainer.innerHTML = `
-              <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
+              <img class='preview-image' src='${photoArrayHd[selectedImage]}' alt='photo'/>
               `;
 
       previewImageSelection = document.querySelector(".preview-image");
@@ -215,10 +250,10 @@ function cycleLeft(target) {
 
 function cycleRight(target) {
   if (target.classList[1] === "right-arrow") {
-    if (selectedImage < photoArray.length - 1) {
+    if (selectedImage < photoArrayHd.length - 1) {
       selectedImage++;
       imageContainer.innerHTML = `
-              <img class='preview-image' src='${photoArray[selectedImage]}' alt='photo'/>
+              <img class='preview-image' src='${photoArrayHd[selectedImage]}' alt='photo'/>
               `;
 
       previewImageSelection = document.querySelector(".preview-image");
@@ -231,96 +266,84 @@ function cycleRight(target) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                   MAGNIFYING TOOL FOR PREVIEW IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-function magnifyPreviewImage(element) {
-  element.addEventListener("click", (e) => {
-    let currentPhotoClass = e.currentTarget.attributes[0].value;
-    let currentPhotoSrc = e.currentTarget.attributes[1].value;
 
-    console.log(currentPhotoClass, currentPhotoSrc);
+function magnifyPreviewImage(photo) {
+  const imageDiv = document.querySelector(".image-container");
+  const outerContainer = document.querySelector("#image-preview-inside-container");
 
-    function magnify(imageClass, zoom) {
-      var img,
-        glass,
-        width,
-        height,
-        i = 2;
+  let distanceFromMiddleX = null;
+  let distanceFromMiddleY = null;
+  let middleY = null;
+  let middleX = null;
+  let mouseImagePositionX = null;
+  let mouseImagePositionY = null;
+  let zoomScale = null;
+  let clicked = false;
 
-      img = document.querySelector(`.${imageClass}`);
-      console.log(img);
+  imageDiv.addEventListener("click", clickedImage, false);
 
-      /*create magnifier glass:*/
-      glass = document.createElement("div");
-      glass.setAttribute("class", "img-magnifier-glass");
-      glass.style.display = "flex";
-      glass.addEventListener("click", (e) => {
-        glass.style.display = "none";
-      });
-
-      /*insert magnifier glass:*/
-      img.parentElement.insertBefore(glass, img);
-
-      /*set background properties for the magnifier glass:*/
-      glass.style.backgroundImage = "url('" + img.src + "')";
-      glass.style.backgroundRepeat = "no-repeat";
-      glass.style.backgroundSize = img.width * zoom + "px " + img.height * zoom + "px";
-      width = glass.offsetWidth / 2;
-      height = glass.offsetHeight / 2;
-
-      /*execute a function when someone moves the magnifier glass over the image:*/
-      glass.addEventListener("mousemove", moveMagnifier);
-      img.addEventListener("mousemove", moveMagnifier);
-
-      function moveMagnifier(e) {
-        var pos, x, y;
-
-        /*prevent any other actions that may occur when moving over the image*/
-        e.preventDefault();
-
-        /*get the cursor's x and y positions:*/
-        pos = getCursorPos(e);
-        x = pos.x;
-        y = pos.y;
-
-        /*prevent the magnifier glass from being positioned outside the image:*/
-        if (x > img.width - width / zoom) {
-          x = img.width - width / zoom;
-        }
-        if (x < width / zoom) {
-          x = width / zoom;
-        }
-        if (y > img.height - height / zoom) {
-          y = img.height - height / zoom;
-        }
-        if (y < height / zoom) {
-          y = height / zoom;
-        }
-
-        /*set the position of the magnifier glass:*/
-        glass.style.left = x - width + "px";
-        glass.style.top = y - height + "px";
-
-        /*display what the magnifier glass "sees":*/
-        glass.style.backgroundPosition = "-" + (x * zoom - width) + "px -" + (y * zoom - height) + "px";
-      }
-      function getCursorPos(e) {
-        var a,
-          x = 0,
-          y = 0;
-        e = e || window.event;
-
-        /*get the x and y positions of the image:*/
-        a = img.getBoundingClientRect();
-
-        /*calculate the cursor's x and y coordinates, relative to the image:*/
-        x = e.pageX - a.left;
-        y = e.pageY - a.top;
-
-        /*consider any page scrolling:*/
-        x = x - window.pageXOffset;
-        y = y - window.pageYOffset;
-        return { x: x, y: y };
-      }
-    }
-    magnify(currentPhotoClass, 3);
+  photo.addEventListener("mouseenter", () => {
+    photo.classList.add("hover");
   });
+
+  function clickedImage(e) {
+    if (e.currentTarget.children[0].classList[1] === "hover") {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      photo.classList.add("zoom");
+      photo.classList.remove("hover");
+
+      mousePositionArray = [];
+
+      mousePositionArray.push(mouseX);
+      mousePositionArray.push(mouseY);
+
+      console.log(mousePositionArray);
+
+      middleY = imageDiv.clientHeight / 2;
+      middleX = imageDiv.clientWidth / 2;
+
+      mouseImagePositionX = mouseX - imageDiv.getBoundingClientRect().left;
+      mouseImagePositionY = mouseY - imageDiv.getBoundingClientRect().top;
+
+      distanceFromMiddleY = middleY - mouseImagePositionY;
+      distanceFromMiddleX = middleX - mouseImagePositionX;
+
+      zoomScale = 3;
+
+      photo.style.top = `${distanceFromMiddleY * zoomScale}px`;
+      photo.style.left = `${distanceFromMiddleX * zoomScale}px`;
+      photo.style.transform = `scale(${zoomScale})`;
+      photo.style.transition = ".2s all ease-in-out";
+
+      outerContainer.addEventListener("mousemove", moving, false);
+
+      clicked = true;
+    } else {
+      photo.style.top = "0";
+      photo.style.left = "0";
+      photo.style.transform = `scale(1)`;
+      photo.style.transition = `.2s all ease-in-out`;
+
+      photo.classList.remove("zoom");
+      photo.classList.add("hover");
+
+      outerContainer.removeEventListener("mousemove", moving, false);
+
+      clicked = false;
+    }
+  }
+
+  function moving(e) {
+    if (clicked === true) {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      const mouseDifferenceX = mousePositionArray[0] - mouseX;
+      const mouseDifferenceY = mousePositionArray[1] - mouseY;
+
+      photo.style.transition = "none";
+      photo.style.transform = `scale(${zoomScale}) translate(${mouseDifferenceX + "px"}, ${mouseDifferenceY + "px"})`;
+    }
+  }
 }
